@@ -94,8 +94,16 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         
-
-        pass
+        a1 = X
+        
+        z2 = np.dot(W1,a1) + b1
+        a2 = np.ReLU(z2)
+        
+        z3 = np.dot(W2,a2) + b2
+        a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
+        
+        score = a3
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
