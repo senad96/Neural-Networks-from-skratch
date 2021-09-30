@@ -94,15 +94,37 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         
-        a1 = X
+        def ReLU(x):
+            for i in range(len(x)):
+                for j in range(len(x[0])):
+                    if x[i,j] < 0:
+                        x[i,j] = 0
+            return x
+
+
+        a1 = np.transpose(X)
+        W1 = np.transpose(W1)
+        W2 = np.transpose(W2)
         
-        z2 = np.dot(W1,a1) + b1
-        a2 = np.ReLU(z2)
+        #print(a1.shape)
+        #print(W1.shape)
+        z2 = np.dot(W1,a1)
         
-        z3 = np.dot(W2,a2) + b2
+        for i in range(len(z2)):
+            z2[i] += b1[i]
+
+        a2 = ReLU(z2)
+        
+        
+        #print(W2.shape)
+        
+        z3 = np.dot(W2,a2)
+        for i in range(len(z3)):
+            z3[i] += b1[i]
+        
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
-        score = a3
+        scores = a3
         
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
