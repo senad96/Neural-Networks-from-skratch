@@ -94,6 +94,8 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         
+
+        #relu function by hand
         def ReLU(x):
             for i in range(len(x)):
                 for j in range(len(x[0])):
@@ -101,32 +103,34 @@ class TwoLayerNet(object):
                         x[i,j] = 0
             return x
 
-
+        
+        #transpose the matrices for a better organization
         a1 = np.transpose(X)
         W1 = np.transpose(W1)
         W2 = np.transpose(W2)
         
         
-        #print(a1.shape)
-        #print(W1.shape)
+        #first layer
         z2 = np.dot(W1,a1)
         
-        
+        # add biases
         for i in range(len(z2)):
             z2[i] += b1[i]
-
+        
+        #relu
         a2 = ReLU(z2)
+
         
-        #print(W2.shape)
-        
+        #second layer + bias + softmax
         z3 = np.dot(W2,a2)
+        
         for i in range(len(z3)):
             z3[i] += b1[i]
         
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
+        #transpose in the end
         scores = np.transpose(a3)
-        
         
         
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
