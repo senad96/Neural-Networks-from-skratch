@@ -106,15 +106,16 @@ class TwoLayerNet(object):
         W1 = np.transpose(W1)
         W2 = np.transpose(W2)
         
+        
         #print(a1.shape)
         #print(W1.shape)
         z2 = np.dot(W1,a1)
+        
         
         for i in range(len(z2)):
             z2[i] += b1[i]
 
         a2 = ReLU(z2)
-        
         
         #print(W2.shape)
         
@@ -124,9 +125,10 @@ class TwoLayerNet(object):
         
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
-        scores = a3
+        scores = np.transpose(a3)
         
-
+        
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
 
