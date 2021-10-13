@@ -104,14 +104,14 @@ class TwoLayerNet(object):
             return x
 
         
-        #transpose the matrices for a better organization
+        #transpose the matrices to exploit moltiplication
         a1 = np.transpose(X)
-        W1 = np.transpose(W1)
-        W2 = np.transpose(W2)
+        W1_t = np.transpose(W1)
+        W2_t = np.transpose(W2)
         
         
         #first layer
-        z2 = np.dot(W1,a1)
+        z2 = np.dot(W1_t,a1)
         
         # add biases
         for i in range(len(z2)):
@@ -122,7 +122,7 @@ class TwoLayerNet(object):
 
         
         #second layer + bias + softmax
-        z3 = np.dot(W2,a2)
+        z3 = np.dot(W2_t,a2)
         
         for i in range(len(z3)):
             z3[i] += b1[i]
@@ -156,8 +156,23 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
         
+        def cross_entropy_single_pattern(p, label):
+            return - np.log( p[label] )
+
+
+        # sum all loss contributes
+        for i in range(N):
+            loss +=  cross_entropy_single_pattern( scores[i],y[i] )
         
-        pass
+        
+        # regularizer
+        W1_norm = (np.linalg.norm(W1))**2
+        W2_norm = (np.linalg.norm(W2))**2
+        
+        
+        loss = loss/N + reg * ( W1_norm + W2_norm )
+        
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
