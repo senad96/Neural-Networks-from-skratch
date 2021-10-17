@@ -125,7 +125,7 @@ class TwoLayerNet(object):
         z3 = np.dot(W2_t,a2)
         
         for i in range(len(z3)):
-            z3[i] += b1[i]
+            z3[i] += b2[i]
         
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
@@ -187,9 +187,7 @@ class TwoLayerNet(object):
 
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
-        
 
-        pass
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
