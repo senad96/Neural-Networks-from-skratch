@@ -122,7 +122,7 @@ class TwoLayerNet(object):
             #z2[i] += b1[i]
 
         # matrix version (row-wise sum)
-        z2 = np.sum([z2, b1], axis = 0)
+        z2 = z2 + b1[:, None]
         
         #relu
         a2 = ReLU(z2)
@@ -135,7 +135,7 @@ class TwoLayerNet(object):
             #z3[i] += b2[i]
             
         # matrix version (row-wise sum)
-        z3 = np.sum([z3, b2], axis = 0)
+        z3 = z3 + b2[:, None]
         
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
