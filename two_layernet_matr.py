@@ -106,7 +106,7 @@ class TwoLayerNet(object):
         # matrix version (simply taking element-wise maximum between a matrix of
         # same dim of W with all zeros and the W matrix)
         def ReLU(x):
-            return np.maximum(x, np.zeros((x.shape[0]). x.shape[1]))
+            return np.maximum(x, np.zeros((x.shape[0]), x.shape[1]))
         
         #transpose the matrices to exploit moltiplication
         a1 = np.transpose(X)
