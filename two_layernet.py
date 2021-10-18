@@ -96,13 +96,18 @@ class TwoLayerNet(object):
         
 
         #relu function by hand
-        def ReLU(x):
-            for i in range(len(x)):
-                for j in range(len(x[0])):
-                    if x[i,j] < 0:
-                        x[i,j] = 0
-            return x
+        #def ReLU(x):
+            #for i in range(len(x)):
+                #for j in range(len(x[0])):
+                    #if x[i,j] < 0:
+                        #x[i,j] = 0
+            #return x
 
+        # matrix version (simply taking element-wise maximum between a matrix of
+        # same dim of W with all zeros and the W matrix)
+        def ReLU(x):
+            #print(x)
+            return np.maximum(x, np.zeros((x.shape[0], x.shape[1])))
         
         #transpose the matrices to exploit moltiplication
         a1 = np.transpose(X)
@@ -114,23 +119,32 @@ class TwoLayerNet(object):
         z2 = np.dot(W1_t,a1)
         
         # add biases
-        for i in range(len(z2)):
-            z2[i] += b1[i]
+        #for i in range(len(z2)):
+            #z2[i] += b1[i]
+
+        # matrix version (row-wise sum)
+        z2 = z2 + b1[:, None]
         
         #relu
+        
         a2 = ReLU(z2)
 
         
         #second layer + bias + softmax
         z3 = np.dot(W2_t,a2)
         
-        for i in range(len(z3)):
-            z3[i] += b2[i]
+        #for i in range(len(z3)):
+            #z3[i] += b2[i]
+            
+        # matrix version (row-wise sum)
+        z3 = z3 + b2[:, None]
         
         a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
         
         #transpose in the end
         scores = np.transpose(a3)
+        
+        
         
         
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -156,24 +170,23 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
         
-        def cross_entropy_single_pattern(p, label):
-            return - np.log( p[label] )
-
-
-        # sum all loss contributes
-        for i in range(N):
-            loss +=  cross_entropy_single_pattern( scores[i],y[i] )
+        i = np.arange(0,N,1)
         
+        
+        # matrix version...HERE WAS THE ERRORRRRRRRR
+        loss = np.mean(-np.log(scores[i,y]), axis = 0)
         
         # regularizer
         W1_norm = (np.linalg.norm(W1))**2
         W2_norm = (np.linalg.norm(W2))**2
         
         
-        loss = loss/N + reg * ( W1_norm + W2_norm )
+        # matrix version 
+        loss = loss + reg * ( W1_norm + W2_norm )
         
         
-
+        
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         # Backward pass: compute gradients
@@ -187,7 +200,12 @@ class TwoLayerNet(object):
 
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
-
+        
+        
+        
+        
+        
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -258,8 +276,13 @@ class TwoLayerNet(object):
             
             
             
-            pass
-        
+            self.params['W1'] = self.params['W1'] - learning_rate * grads['W1']
+            self.params['W2'] = self.params['W2'] - learning_rate * grads['W2']
+            self.params['b1'] = self.params['b1'] - learning_rate * grads['b1']
+            self.params['b2'] = self.params['b2'] - learning_rate * grads['b2']
+            
+
+
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
             if verbose and it % 100 == 0:
