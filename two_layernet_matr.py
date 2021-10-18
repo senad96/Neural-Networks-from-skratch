@@ -171,16 +171,21 @@ class TwoLayerNet(object):
 
 
         # sum all loss contributes
-        for i in range(N):
-            loss +=  cross_entropy_single_pattern( scores[i],y[i] )
+        #for i in range(N):
+            #loss +=  cross_entropy_single_pattern( scores[i],y[i] )
         
+        # matrix version 
+        loss = np.mean(-np.log(scores), axis = 0)
         
         # regularizer
         W1_norm = (np.linalg.norm(W1))**2
         W2_norm = (np.linalg.norm(W2))**2
         
         
-        loss = loss/N + reg * ( W1_norm + W2_norm )
+        #loss = loss/N + reg * ( W1_norm + W2_norm )
+        
+        # matrix version 
+        loss = loss + reg * ( W1_norm + W2_norm )
         
         
 
