@@ -199,8 +199,35 @@ class TwoLayerNet(object):
         ##############################################################################
 
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        delta = np.zeros((5,3))
+        for i in range(len(scores)):
+          delta[i][y[i]] = 1
+
+
+      
+        grad_z3 =  1/N *(scores-delta)
+        #grads['b2'] = grad_z3
+
+        dz3_db2 =  np.ones((1,5))
+        grads['b2'] = np.dot(dz3_db2, grad_z3) 
+        
+        grads['W2'] = np.dot( a2, grad_z3) +2*reg* W2 
         
         
+
+        grads_a2 = np.dot(W2,np.transpose(grad_z3))
+        
+        step= np.sign(a2)
+
+        step_t = np.transpose(step)
+     
+        grads_z2 = np.multiply(grads_a2, step)
+        
+        grads['b1'] = np.dot( np.ones((1,5)), np.transpose(grads_z2) )
+
+
+        
+        grads['W1'] = np.dot(a1, np.transpose(grads_z2))  +2*reg* W1 
         
         
         
