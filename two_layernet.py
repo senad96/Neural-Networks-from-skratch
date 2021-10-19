@@ -282,7 +282,17 @@ class TwoLayerNet(object):
             
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             
+            # associating the right label to each X_i
+            y = np.reshape(y, (5,1))
+            data = np.concatenate((X, y), axis=1)
             
+            # random shuffle and then take subsample
+            np.random.shuffle(data)
+            
+            sub = data[:3,:]
+            # re-splitting to get the sub sample of X and y
+            X_batch = sub[:,:4]
+            y_batch = np.reshape(sub[:,4:], (3,)).astype(int)
             
             pass
         
@@ -305,8 +315,8 @@ class TwoLayerNet(object):
             
             self.params['W1'] = self.params['W1'] - learning_rate * grads['W1']
             self.params['W2'] = self.params['W2'] - learning_rate * grads['W2']
-            self.params['b1'] = self.params['b1'] - learning_rate * grads['b1']
-            self.params['b2'] = self.params['b2'] - learning_rate * grads['b2']
+            self.params['b1'] = np.reshape(self.params['b1'] - learning_rate * grads['b1'], (10,))
+            self.params['b2'] = np.reshape(self.params['b2'] - learning_rate * grads['b2'], (3,))
             
 
 
