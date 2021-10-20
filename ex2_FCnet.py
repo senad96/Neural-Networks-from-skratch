@@ -275,6 +275,7 @@ best_net = None # store the best model into this
 
 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+
 input_size = 32 * 32 * 3
 num_classes = 10
 
@@ -283,7 +284,7 @@ hidden_size = [ 50, 64, 128, 256 ]
 lr = [ 0.0001, 0.0005, 0.001, 0.002  ]
 lr_decay = [ 0.90, 0.92, 0.95 ] 
 regularization = [ 0.15, 0.20, 0.25 ]
-n_iters = [ 1200, 1500, 1800 ]
+n_iters = [ 1500, 1800, 2000, 2200 ]
 batch_size = [ 32, 64, 128, 200, 512, 1024 ] 
 
 
@@ -297,8 +298,16 @@ def random_choice(x):
 
 # Train 25 networks and choose the best one!
 
+best_hidden_size = 0
+best_lr = 0
+best_lr_decay = 0
+best_regularization = 0
+best_n_iters = 0
+best_batch_size = 0
+
+
 best_val_accuracy = 0
-for x in range(10):
+for x in range(5):
     
     
     idx1 = random_choice(3)  #hidden_size
@@ -319,11 +328,31 @@ for x in range(10):
 
     # Predict on the validation set
     val_acc = (network.predict(X_val) == y_val).mean()
+    
     print('Validation accuracy: ', val_acc)
     if val_acc  > best_val_accuracy:
         best_net = network
         best_val_accuracy = val_acc
+        best_hidden_size = hidden_size[idx1]
+        best_lr = lr[idx2]
+        best_lr_decay = lr_decay[idx3]
+        best_regularization = regularization[idx4]
+        best_n_iters = n_iters[idx5]
+        best_batch_size = batch_size[idx6]
     
+
+
+#we find out the best hyper-paramters !! now we increase the steps.
+
+
+best_net = TwoLayerNet(input_size, best_hidden_size, num_classes)
+stats = best_net.train(X_train, y_train, X_val, y_val,
+            num_iters=6600, batch_size=best_batch_size,
+            learning_rate=best_lr, learning_rate_decay=best_lr_decay,
+            reg=best_regularization, verbose=True)
+
+val_acc = (best_net.predict(X_val) == y_val).mean()
+print('Validation accuracy: ', val_acc)
 
 
 
