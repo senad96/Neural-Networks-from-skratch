@@ -123,6 +123,7 @@ class TwoLayerNet(object):
             #z2[i] += b1[i]
 
         # matrix version (row-wise sum)
+        
         z2 = z2 + b1[:, None]
         
         #relu
@@ -199,21 +200,24 @@ class TwoLayerNet(object):
         ##############################################################################
 
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        delta = np.zeros((5,3))
+        
+        
+        
+        delta = np.zeros((N,len(np.unique(y))))
         for i in range(len(scores)):
           delta[i][y[i]] = 1
+          #print(i)
 
 
       
         grad_z3 =  1/N *(scores-delta)
         #grads['b2'] = grad_z3
 
-        dz3_db2 =  np.ones((1,5))
+        dz3_db2 =  np.ones((1,N))
         grads['b2'] = np.dot(dz3_db2, grad_z3) 
         
         grads['W2'] = np.dot( a2, grad_z3) +2*reg* W2 
-        
-        
+           
 
         grads_a2 = np.dot(W2,np.transpose(grad_z3))
         
@@ -223,7 +227,7 @@ class TwoLayerNet(object):
      
         grads_z2 = np.multiply(grads_a2, step)
         
-        grads['b1'] = np.dot( np.ones((1,5)), np.transpose(grads_z2) )
+        grads['b1'] = np.dot( np.ones((1,N)), np.transpose(grads_z2) )
 
 
         
@@ -231,9 +235,6 @@ class TwoLayerNet(object):
         
         
         
-        
-        
-
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return loss, grads
@@ -282,9 +283,10 @@ class TwoLayerNet(object):
             
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             
+            random_idx = np.random.choice(num_train, size=batch_size)
             
-            
-            pass
+            X_batch = X[random_idx, :]
+            y_batch = y[random_idx]
         
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -301,13 +303,17 @@ class TwoLayerNet(object):
             
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             
+            hidden_s = self.params['W1'].shape[1]
+            output_s = self.params['W2'].shape[1]
+            
             
             
             self.params['W1'] = self.params['W1'] - learning_rate * grads['W1']
             self.params['W2'] = self.params['W2'] - learning_rate * grads['W2']
-            self.params['b1'] = self.params['b1'] - learning_rate * grads['b1']
-            self.params['b2'] = self.params['b2'] - learning_rate * grads['b2']
+            self.params['b1'] = np.reshape(self.params['b1'] - learning_rate * grads['b1'], (hidden_s,))
+            self.params['b2'] = np.reshape(self.params['b2'] - learning_rate * grads['b2'], (output_s,))
             
+
 
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -358,8 +364,51 @@ class TwoLayerNet(object):
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
 
+        def ReLU(x):
+            #print(x)
+            return np.maximum(x, np.zeros((x.shape[0], x.shape[1])))
+        
+        
+        W1, b1 = self.params['W1'], self.params['b1']
+        W2, b2 = self.params['W2'], self.params['b2'] #shapes 10,3 -- 3
+        N, D = X.shape
+        
+        a1 = np.transpose(X)
+        W1_t = np.transpose(W1)
+        W2_t = np.transpose(W2)
+        
+        
+        #first layer
+        z2 = np.dot(W1_t,a1)
+    
 
-        pass
+        # matrix version (row-wise sum)
+        z2 = z2 + b1[:, None]
+        
+        #relu
+        a2 = ReLU(z2)
+
+        
+        #second layer + bias + softmax
+        z3 = np.dot(W2_t,a2)
+
+        # matrix version bias (row-wise sum)
+        z3 = z3 + b2[:, None]
+        
+        a3 = np.exp(z3) / np.sum(np.exp(z3), axis=0)   #softmax
+        
+        #transpose in the end
+        scores = np.transpose(a3)
+        
+        
+        y_pred = np.zeros(N)
+        
+        
+        for i in range(N):
+            c = np.argmax(scores[i])
+            y_pred[i] = c
+              
+        #print(y_pred)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

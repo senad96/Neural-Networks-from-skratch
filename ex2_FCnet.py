@@ -275,9 +275,57 @@ best_net = None # store the best model into this
 
 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+input_size = 32 * 32 * 3
+num_classes = 10
+
+#possible values for hyper-parameters
+hidden_size = [ 50, 64, 128, 256 ]
+lr = [ 0.0005, 0.001, 0.002, 0.005 ]
+lr_decay = [ 0.90, 0.92, 0.95 ] 
+regularization = [ 0.15, 0.20, 0.25 ]
+n_iters = [ 1200, 1500, 1800 ]
+batch_size = [ 128, 200, 512, 1024 ] 
 
 
-pass
+# we have 46656 possibile choices. We need a random search.
+def random_choice(x):
+    return int(np.random.choice(np.arange(x), 1))
+
+
+#build the network
+#best_net = TwoLayerNet(input_size, hidden_size, num_classes)
+
+# Train 25 networks and choose the best one!
+
+best_val_accuracy = 0
+for x in range(5):
+    
+    
+    idx1 = random_choice(3)  #hidden_size
+    idx2 = random_choice(4)  #learning rate
+    idx3 = random_choice(3)  #lr_decay
+    idx4 = random_choice(3)  #regularization
+    idx5 = random_choice(3)  #n_iters
+    idx6 = random_choice(4)  #batch_size
+    
+    print(idx1,idx2,idx3,idx4,idx5,idx6)
+    
+    network = TwoLayerNet(input_size, hidden_size[idx1], num_classes)
+    
+    stats = network.train(X_train, y_train, X_val, y_val,
+                num_iters=n_iters[idx5], batch_size=batch_size[idx6],
+                learning_rate=lr[idx2], learning_rate_decay=lr_decay[idx3],
+                reg=regularization[idx4], verbose=True)
+
+    # Predict on the validation set
+    val_acc = (network.predict(X_val) == y_val).mean()
+    print('Validation accuracy: ', val_acc)
+    if val_acc  > best_val_accuracy:
+        best_net = network
+        best_val_accuracy = val_acc
+    
+
+
 
 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
