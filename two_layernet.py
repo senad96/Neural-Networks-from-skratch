@@ -203,8 +203,8 @@ class TwoLayerNet(object):
         
         
         
-        delta = np.zeros((N,len(np.unique(y))))
-        for i in range(len(scores)):
+        delta = np.zeros((N,len(scores[0])))
+        for i in range(N):
           delta[i][y[i]] = 1
           #print(i)
 

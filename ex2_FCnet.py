@@ -280,11 +280,11 @@ num_classes = 10
 
 #possible values for hyper-parameters
 hidden_size = [ 50, 64, 128, 256 ]
-lr = [ 0.0005, 0.001, 0.002, 0.005 ]
+lr = [ 0.0001, 0.0005, 0.001, 0.002  ]
 lr_decay = [ 0.90, 0.92, 0.95 ] 
 regularization = [ 0.15, 0.20, 0.25 ]
 n_iters = [ 1200, 1500, 1800 ]
-batch_size = [ 128, 200, 512, 1024 ] 
+batch_size = [ 32, 64, 128, 200, 512, 1024 ] 
 
 
 # we have 46656 possibile choices. We need a random search.
@@ -298,7 +298,7 @@ def random_choice(x):
 # Train 25 networks and choose the best one!
 
 best_val_accuracy = 0
-for x in range(5):
+for x in range(10):
     
     
     idx1 = random_choice(3)  #hidden_size
@@ -306,7 +306,7 @@ for x in range(5):
     idx3 = random_choice(3)  #lr_decay
     idx4 = random_choice(3)  #regularization
     idx5 = random_choice(3)  #n_iters
-    idx6 = random_choice(4)  #batch_size
+    idx6 = random_choice(6)  #batch_size
     
     print(idx1,idx2,idx3,idx4,idx5,idx6)
     
