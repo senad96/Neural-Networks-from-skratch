@@ -282,27 +282,13 @@ class TwoLayerNet(object):
             #########################################################################
             
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+
             
-<<<<<<< HEAD
             random_idx = np.random.choice(num_train, size=batch_size)
             
             X_batch = X[random_idx, :]
             y_batch = y[random_idx]
-=======
-            # associating the right label to each X_i
-            y = np.reshape(y, (5,1))
-            data = np.concatenate((X, y), axis=1)
-            
-            # random shuffle and then take subsample
-            np.random.shuffle(data)
-            
-            sub = data[:3,:]
-            # re-splitting to get the sub sample of X and y
-            X_batch = sub[:,:4]
-            y_batch = np.reshape(sub[:,4:], (3,)).astype(int)
-            
-            pass
->>>>>>> c2af667c9884b1f7f285c214f45d1c89b94d535f
+
         
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -326,15 +312,10 @@ class TwoLayerNet(object):
             
             self.params['W1'] = self.params['W1'] - learning_rate * grads['W1']
             self.params['W2'] = self.params['W2'] - learning_rate * grads['W2']
-<<<<<<< HEAD
+
             self.params['b1'] = np.reshape(self.params['b1'] - learning_rate * grads['b1'], (hidden_s,))
             self.params['b2'] = np.reshape(self.params['b2'] - learning_rate * grads['b2'], (output_s,))
-=======
-            self.params['b1'] = np.reshape(self.params['b1'] - learning_rate * grads['b1'], (10,))
-            self.params['b2'] = np.reshape(self.params['b2'] - learning_rate * grads['b2'], (3,))
->>>>>>> c2af667c9884b1f7f285c214f45d1c89b94d535f
             
-
 
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
