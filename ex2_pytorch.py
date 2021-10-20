@@ -111,9 +111,34 @@ class MultiLayerPerceptron(nn.Module):
         layers = [] #Use the layers list to store a variable number of layers
         
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
         
-
+        
+        
+        fc1 = nn.Linear(input_size, hidden_layers[0])
+        
+        fc1_relu = nn.ReLU(fc1)
+        
+        #add in layers
+        layers.append(fc1)
+        layers.append(fc1_relu)
+        
+        
+        #add other layers... the first layer is always present.
+        
+        if len(hidden_layers) > 1:
+        
+            for i in range(len(hidden_layers)-2):
+                
+                fc = nn.Linear(hidden_layers[i],hidden_layers[i+1])
+                layers.append(fc)
+                layers.append(nn.ReLU(fc))
+        
+        
+        fc = nn.Linear(hidden_layers[-1], num_classes)
+        
+        layers.append(fc)
+        
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         # Enter the layers into nn.Sequential, so the model may "see" them
@@ -130,8 +155,8 @@ class MultiLayerPerceptron(nn.Module):
         
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-
-
+        out = self.layers(x)
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
         return out
@@ -169,7 +194,14 @@ if train:
             #################################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-
+            model.zero_grad()
+            
+            output = model(images.view(-1,input_size).float())
+            
+            loss =  criterion(output, labels.long())
+            loss.backward()
+            optimizer.step()
+            
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -192,8 +224,11 @@ if train:
                 # 2. Get the most confident predicted class        #
                 ####################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-            
+                
+                output = model(images.view(-1,input_size).float())
+                
+                predicted = torch.argmax(output, dim=1)
+                
 
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
                 total += labels.size(0)
